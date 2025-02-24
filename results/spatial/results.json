@@ -1,0 +1,28 @@
+{
+  "cb_2015_42_tract_500k": {
+    "5": {
+      "runtime": 6729.539947271347,
+      "success_rate": 0.8,
+      "avg_heterogeneity": 0.06223091373168717,
+      "std_heterogeneity": 0.0026186032802574424,
+      "min_heterogeneity": 0.06125996311527145,
+      "max_heterogeneity": 0.07557351690740957
+    },
+    "10": {
+      "runtime": 2544.8277459144592,
+      "success_rate": 0.69,
+      "avg_heterogeneity": 0.06386062682832912,
+      "std_heterogeneity": 0.004089513085577086,
+      "min_heterogeneity": 0.06125996311527146,
+      "max_heterogeneity": 0.075880500303779
+    },
+    "20": {
+      "runtime": 1088.5997378826141,
+      "success_rate": 0.83,
+      "avg_heterogeneity": 0.06603828776676837,
+      "std_heterogeneity": 0.0051105291401202175,
+      "min_heterogeneity": 0.06125996311527145,
+      "max_heterogeneity": 0.07591919851556782
+    }
+  }
+}
