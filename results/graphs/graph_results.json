@@ -1,0 +1,133 @@
+{
+  "PGPgiantcompo": {
+    "stats": {
+      "num_nodes": 10680,
+      "num_edges": 48606,
+      "density": 0.000852350144302953,
+      "is_connected": true,
+      "avg_degree": 9.102247191011235,
+      "min_degree": 1,
+      "max_degree": 207,
+      "degree_distribution": {
+        "min": 1,
+        "max": 207,
+        "avg": 9.102247191011235,
+        "histogram": [
+          0,
+          1,
+          2026,
+          1552,
+          1220,
+          906,
+          689,
+          593,
+          452,
+          376
+        ]
+      },
+      "sample_clustering": 0.0016293650793650794
+    },
+    "5": {
+      "runtime": [
+        72.1529471874237
+      ],
+      "cut_edges": [
+        26567
+      ],
+      "modularity": [
+        0.45100741343639056
+      ],
+      "balance": [
+        1.0
+      ],
+      "success_rate": 1.0,
+      "metrics": [],
+      "avg_runtime": 72.1529471874237,
+      "std_runtime": 0.0,
+      "avg_cut_edges": 26567.0,
+      "std_cut_edges": 0.0,
+      "avg_modularity": 0.45100741343639056,
+      "std_modularity": 0.0,
+      "avg_balance": 1.0,
+      "std_balance": 0.0,
+      "best_metrics": {
+        "connectivity": true,
+        "cut_edges": 26567,
+        "modularity": 0.45100741343639056,
+        "balance": 1.0,
+        "max_size_deviation": 0,
+        "avg_size_deviation": 0.0,
+        "size_dev_std": 0.0,
+        "cut_ratio": 0.5465786116940295
+      }
+    },
+    "8": {
+      "runtime": [
+        51.89983606338501
+      ],
+      "cut_edges": [
+        29908
+      ],
+      "modularity": [
+        0.3831762840170092
+      ],
+      "balance": [
+        1.0
+      ],
+      "success_rate": 1.0,
+      "metrics": [],
+      "avg_runtime": 51.89983606338501,
+      "std_runtime": 0.0,
+      "avg_cut_edges": 29908.0,
+      "std_cut_edges": 0.0,
+      "avg_modularity": 0.3831762840170092,
+      "std_modularity": 0.0,
+      "avg_balance": 1.0,
+      "std_balance": 0.0,
+      "best_metrics": {
+        "connectivity": true,
+        "cut_edges": 29908,
+        "modularity": 0.3831762840170092,
+        "balance": 1.0,
+        "max_size_deviation": 0,
+        "avg_size_deviation": 0.0,
+        "size_dev_std": 0.0,
+        "cut_ratio": 0.6153149816895034
+      }
+    },
+    "10": {
+      "runtime": [
+        42.559853315353394
+      ],
+      "cut_edges": [
+        30974
+      ],
+      "modularity": [
+        0.36154658208337653
+      ],
+      "balance": [
+        1.0
+      ],
+      "success_rate": 1.0,
+      "metrics": [],
+      "avg_runtime": 42.559853315353394,
+      "std_runtime": 0.0,
+      "avg_cut_edges": 30974.0,
+      "std_cut_edges": 0.0,
+      "avg_modularity": 0.36154658208337653,
+      "std_modularity": 0.0,
+      "avg_balance": 1.0,
+      "std_balance": 0.0,
+      "best_metrics": {
+        "connectivity": true,
+        "cut_edges": 30974,
+        "modularity": 0.36154658208337653,
+        "balance": 1.0,
+        "max_size_deviation": 0,
+        "avg_size_deviation": 0.0,
+        "size_dev_std": 0.0,
+        "cut_ratio": 0.6372464304818335
+      }
+    }
+  }
+}
