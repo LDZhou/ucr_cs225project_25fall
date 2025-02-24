@@ -2,7 +2,6 @@ import networkx as nx
 import numpy as np
 from typing import List, Set, Dict, Any
 
-
 def evaluate_partition(G: nx.Graph, partition: List[Set[int]]) -> Dict[str, Any]:
     """
     Evaluate partition quality metrics
@@ -23,7 +22,7 @@ def evaluate_partition(G: nx.Graph, partition: List[Set[int]]) -> Dict[str, Any]
     # Check connectivity for each partition
     for part in partition:
         if not part:
-            # 空分区，直接标为不连通
+            # Empty partition, mark as disconnected
             metrics['connectivity'] = False
             break
         subg = G.subgraph(part)
@@ -51,8 +50,7 @@ def evaluate_partition(G: nx.Graph, partition: List[Set[int]]) -> Dict[str, Any]
 
     metrics['cut_edges'] = cut_edges
 
-    # Compute modularity Q (简化版本)
-    # 如果需要更精确的Modularity，可考虑更复杂的计算或networkx自带方法
+    # Compute modularity Q
     Q = (internal_edges / total_edges) - sum(
         (len(part) / (2 * total_edges)) ** 2
         for part in partition
@@ -67,10 +65,9 @@ def evaluate_partition(G: nx.Graph, partition: List[Set[int]]) -> Dict[str, Any]
 
     return metrics
 
-
 def compute_metrics(G: nx.Graph, partition: List[Set[int]], target_sizes: List[int]) -> Dict[str, float]:
     """
-    Compute comprehensive set of partition quality metrics
+    Compute a comprehensive set of partition quality metrics
 
     Args:
         G: Input graph

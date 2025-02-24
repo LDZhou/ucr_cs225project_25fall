@@ -16,7 +16,3 @@ seaborn>=0.12.0
 # Utilities
 tqdm>=4.65.0
 pandas>=1.5.0
-
-# Notebooks
-jupyter>=1.0.0
-ipykernel>=6.0.0

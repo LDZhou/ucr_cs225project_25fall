@@ -7,8 +7,8 @@ from typing import Dict, List, Any, Set
 import networkx as nx
 import matplotlib.pyplot as plt
 
-# 注意：下面的import路径需要根据你的实际目录结构进行调整
-# 假设你在 src/ 下运行，且 graph 文件夹也在 src/ 下：
+# Note: Adjust the import paths below according to your actual directory structure
+# Assuming you're running from src/ and the graph folder is also under src/:
 from ..graph.graph_loader import load_graph, get_graph_stats
 from ..graph.partition import GraphPartitioner
 from ..graph.evaluation import compute_metrics
@@ -21,17 +21,17 @@ def visualize_partition(G: nx.Graph, partition: List[Set[int]],
     For large graphs (10k+ nodes), consider random sampling or
     a different layout approach if runtime is too long or visualization is too cluttered.
     """
-    # 设置可重复的布局，以及更多迭代次数
+    # Set reproducible layout with more iterations
     pos = nx.spring_layout(G, seed=42, iterations=100)
     plt.figure(figsize=(12, 8))
 
-    # 调整节点大小、边透明度等
+    # Adjust node size, edge transparency, etc.
     colors = plt.cm.rainbow(np.linspace(0, 1, len(partition)))
     for idx, part in enumerate(partition):
         nx.draw_networkx_nodes(G, pos,
                                nodelist=list(part),
                                node_color=[colors[idx]],
-                               node_size=50,   # 可根据需要调大/调小
+                               node_size=50,   # Can be adjusted larger/smaller as needed
                                alpha=0.9)
 
     nx.draw_networkx_edges(G, pos, alpha=0.2, width=0.5)
@@ -109,7 +109,7 @@ def run_graph_experiments(
 
                     successes += 1
 
-                    # 只可视化第一次成功的trial
+                    # Only visualize the first successful trial
                     if trial == 0:
                         os.makedirs(os.path.join(output_dir, graph_name), exist_ok=True)
                         visualize_partition(
@@ -131,11 +131,11 @@ def run_graph_experiments(
                     results[graph_name][k][f'avg_{metric}'] = np.mean(vals)
                     results[graph_name][k][f'std_{metric}'] = np.std(vals)
 
-                # 选择cut_edges最小的作为best solution
+                # Select solution with minimum cut_edges as the best solution
                 best_idx = np.argmin(results[graph_name][k]['cut_edges'])
                 results[graph_name][k]['best_metrics'] = all_metrics[best_idx]
 
-    # 保存结果到 JSON
+    # Save results to JSON
     os.makedirs(output_dir, exist_ok=True)
     out_file = os.path.join(output_dir, "graph_results.json")
     with open(out_file, "w", encoding='utf-8') as f:
@@ -187,7 +187,7 @@ def plot_metrics(results: Dict[str, Any], output_dir: str):
 
 
 if __name__ == "__main__":
-    # 示例配置
+    # Example configuration
     graph_files = ["data/graphs/PGPgiantcompo.graph"]
     k_values = [5, 8, 10]
     num_trials = 1

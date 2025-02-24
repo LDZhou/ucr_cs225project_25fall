@@ -9,7 +9,6 @@ This project implements and extends the PRRP (P-Regionalization through Recursiv
 - `src/experiments/`: Experimental evaluation code
 - `data/`: Input datasets
 - `results/`: Experimental results
-- `notebooks/`: Analysis notebooks
 
 ## Installation
 

@@ -12,7 +12,7 @@ class GraphPartitioner:
         self.adj_list = self._build_adjacency_list()
 
     def _build_adjacency_list(self) -> List[Set[int]]:
-        """Convert networkx graph to adjacency list representation."""
+        """Convert a NetworkX graph to an adjacency list representation."""
         n = self.graph.number_of_nodes()
         adj = [set() for _ in range(n)]
         for u, v in self.graph.edges():
@@ -22,17 +22,18 @@ class GraphPartitioner:
 
     def _find_seed_nodes(self, k: int) -> List[int]:
         """
-        改进的Gapless Random Seed Selection：
-         - 第一个种子：从未分配节点中随机选择，但优先选择度数 ≥ 10 的节点。
-         - 后续种子：从前一分区（即上一个种子）的邻居中随机选择；
-           若邻居为空，则回退到更早的种子；
-         - 如果候选邻居节点的度数全部低于 5，则通过 BFS 扩展到两跳邻居，以确保生长潜力。
+        Improved Gapless Random Seed Selection:
+         - First seed: Randomly select from unassigned nodes, prioritizing nodes with degree ≥ 10.
+         - Subsequent seeds: Randomly select from the neighbors of the previous seed;
+           if no neighbors are available, backtrack to earlier seeds.
+         - If all candidate neighbors have a degree below 5, expand to two-hop neighbors via BFS
+           to ensure growth potential.
         """
         n = self.graph.number_of_nodes()
         available = set(range(n))
         seeds = []
 
-        # 第一轮：优先选择度数 ≥ 10 的节点
+        # First round: Prioritize nodes with degree ≥ 10
         high_degree_candidates = [node for node in available if len(self.adj_list[node]) >= 10]
         if high_degree_candidates:
             first_seed = random.choice(high_degree_candidates)
@@ -41,23 +42,23 @@ class GraphPartitioner:
         seeds.append(first_seed)
         available.remove(first_seed)
 
-        # 后续种子
+        # Subsequent seeds
         for i in range(1, k):
-            # 从最后一个种子邻居中挑选（仅考虑未分配节点）
+            # Select from the last seed's neighbors (only unassigned nodes)
             last_seed = seeds[-1]
             candidate_set = self.adj_list[last_seed] & available
 
-            # 若候选集合为空，则依次回退到之前的种子
+            # If no candidates, backtrack to earlier seeds
             fallback_index = len(seeds) - 2
             while not candidate_set and fallback_index >= 0:
                 candidate_set = self.adj_list[seeds[fallback_index]] & available
                 fallback_index -= 1
 
             if not candidate_set:
-                # 若仍为空，则随机选择
+                # If still empty, select randomly
                 candidate = random.choice(list(available))
             else:
-                # 如果候选节点全部度数较低（< 5），则扩展到两跳邻居
+                # If all candidates have low degree (< 5), expand to two-hop neighbors
                 if all(len(self.adj_list[node]) < 5 for node in candidate_set):
                     two_hop = set()
                     visited = {last_seed}
@@ -82,21 +83,21 @@ class GraphPartitioner:
 
     def _partition_attempt(self, attempt_id: int, k: int, sizes: List[int]) -> Optional[List[Set[int]]]:
         """
-        单次分区尝试（可并行执行）。
-        返回满足严格大小和连通性要求的分区（列表形式），否则返回 None。
+        Single partition attempt (executed in parallel).
+        Returns partitions satisfying strict size and connectivity requirements; otherwise, returns None.
         """
         n = self.graph.number_of_nodes()
         if n == 0:
             return [set() for _ in range(k)]
 
-        # 使用改进后的种子选择方法
+        # Use the improved seed selection method
         seeds = self._find_seed_nodes(k)
         partitions = [set([seed]) for seed in seeds]
         unassigned = set(range(n)) - set(seeds)
 
-        # 区域生长：不断将未分配节点分配给各区域
+        # Region growth: Assign unallocated nodes to partitions
         while unassigned:
-            # 选择当前最缺节点的区域（目标大小与当前区域大小的差值最大）
+            # Select the most underfilled partition (with the largest size deficit)
             part_idx = max(range(k), key=lambda i: sizes[i] - len(partitions[i]))
             needed = sizes[part_idx] - len(partitions[part_idx])
             if needed <= 0:
@@ -105,7 +106,7 @@ class GraphPartitioner:
                     return None
                 continue
 
-            # 从当前区域的节点中寻找所有未分配的邻居
+            # Find all unassigned neighbors of the current partition
             frontier = set()
             for node in partitions[part_idx]:
                 frontier.update(nb for nb in self.adj_list[node] if nb in unassigned)
@@ -113,14 +114,14 @@ class GraphPartitioner:
             if not frontier:
                 node = random.choice(list(unassigned))
             else:
-                # 改进选择：计算评分 = (与当前区域连接数) - (与未分配节点连接数)
+                # Improved selection: Score = (connections to current partition) - (connections to unassigned nodes)
                 candidate_scores = {x: len(self.adj_list[x] & partitions[part_idx]) - len(self.adj_list[x] & unassigned)
                                     for x in frontier}
                 node = max(candidate_scores, key=candidate_scores.get)
             partitions[part_idx].add(node)
             unassigned.remove(node)
 
-        # 局部搜索调整：尝试将节点从超额区域转移到不足区域
+        # Local optimization: Adjust nodes from oversize to undersize partitions
         max_moves = 300
         moves = 0
         while moves < max_moves:
@@ -144,12 +145,12 @@ class GraphPartitioner:
                 break
             moves += 1
 
-        # 最终检查：每个分区大小是否严格匹配
+        # Final check: Ensure partition sizes strictly match
         for i in range(k):
             if len(partitions[i]) != sizes[i]:
                 return None
 
-        # 检查每个分区连通性
+        # Check connectivity of each partition
         for part in partitions:
             if not part:
                 return None
@@ -161,8 +162,8 @@ class GraphPartitioner:
 
     def partition(self, k: int, sizes: List[int], max_attempts: int = 50) -> List[Set[int]]:
         """
-        将图划分成 k 个部分，每个部分的节点数严格为 sizes 中对应的值。
-        采用多进程并行尝试，返回满足大小和连通性要求的分区方案。
+        Partition the graph into k parts, each strictly matching the sizes in the list.
+        Uses multiprocessing for parallel execution and returns a valid partitioning.
         """
         n = self.graph.number_of_nodes()
         if k != len(sizes) or sum(sizes) != n:

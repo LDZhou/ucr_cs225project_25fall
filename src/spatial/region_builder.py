@@ -14,9 +14,9 @@ def grow_region(unassigned: Set[int], target_size: int, adj: List[Set[int]],
     Phase 1: Randomly grow a contiguous region from a seed until target_size.
     """
     for _ in range(grow_attempts):
-        # 选择具有较多未分配邻居的种子点
+        # Select a seed point with more unassigned neighbors
         potential_seeds = list(unassigned)
-        if len(potential_seeds) > 10:  # 如果候选太多，随机采样
+        if len(potential_seeds) > 10:  # If too many candidates, randomly sample
             potential_seeds = random.sample(potential_seeds, 10)
         seed = max(potential_seeds, key=lambda x: len(adj[x] & unassigned))
 
@@ -25,7 +25,7 @@ def grow_region(unassigned: Set[int], target_size: int, adj: List[Set[int]],
         stall_count = 0
 
         while frontier and len(region) < target_size and stall_count < max_stalls:
-            # 优先选择非关节点
+            # Prioritize non-articulation points
             candidates = [x for x in frontier if not is_articulation(x, region | {x}, adj)]
             chosen = random.choice(candidates) if candidates else random.choice(list(frontier))
 
